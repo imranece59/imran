@@ -1,4 +1,4 @@
--- Quick dependency check
+-- Quick dependency check with ordered results (Redshift version)
 WITH view_dependencies AS (
     SELECT 
         source_ns.nspname || '.' || source.relname AS parent_view,
@@ -15,7 +15,7 @@ WITH view_dependencies AS (
 )
 SELECT 
     parent_view,
-    STRING_AGG(dependent_view, ', ' ORDER BY dependent_view) AS dependent_views,
+    LISTAGG(dependent_view, ', ') WITHIN GROUP (ORDER BY dependent_view) AS dependent_views,
     COUNT(*) AS dependency_count
 FROM view_dependencies
 WHERE parent_view IN (
