@@ -1,4 +1,4 @@
--- Quick dependency check with ordered results (Redshift version)
+-- Modified query to exclude self-dependencies
 WITH view_dependencies AS (
     SELECT 
         source_ns.nspname || '.' || source.relname AS parent_view,
@@ -12,6 +12,7 @@ WITH view_dependencies AS (
     WHERE source.relkind IN ('v', 'm')
     AND dependent.relkind IN ('v', 'm')
     AND source_ns.nspname NOT IN ('pg_catalog', 'information_schema')
+    AND source.oid != dependent.oid  -- Exclude self-dependencies
 )
 SELECT 
     parent_view,
@@ -19,7 +20,6 @@ SELECT
     COUNT(*) AS dependency_count
 FROM view_dependencies
 WHERE parent_view IN (
-    -- List your views here
     'reporting.customer_summary_v',
     'analytics.sales_metrics_v'
 )
