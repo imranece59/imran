@@ -1,0 +1,22 @@
+user_id,url,event_time
+101, /home ,2025-08-25 10:23:54
+101, /products ,2025-08-25 10:26:01
+101, /products ,2025-08-25 10:26:01   # duplicate row
+101, /cart ,2025-08-25 10:40:00
+102, /home ,2025-08-25 10:25:10
+102, /about ,2025-08-25 10:30:15
+102, /about ,2025-08-25 10:30:15      # duplicate
+103, /home ,2025-08-25 09:00:00
+103, /products ,2025-08-25 09:05:00
+103, /cart ,2025-08-25 09:10:00
+103, /checkout ,2025-08-25 09:15:00
+104, /home ,2025-08-25 08:00:00
+104, /home ,2025-08-25 08:05:00       # same URL, different time
+104, /contact ,2025-08-25 08:10:00
+
+user_id | distinct_urls | total_events
+103     | 4             | 4
+101     | 3             | 3
+104     | 2             | 3   # excluded, since distinct_urls=2 (but total_events≥3)
+102     | 2             | 2   # excluded, total_events < 3
+
